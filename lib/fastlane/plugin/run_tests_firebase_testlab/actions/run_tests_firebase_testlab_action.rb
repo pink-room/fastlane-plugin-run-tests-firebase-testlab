@@ -43,7 +43,7 @@ module Fastlane
 
         if params[:bucket_url].nil?
           UI.message("Parse firebase bucket url.")
-          params[:bucket_url] = scrape_bucket_url
+          params[:bucket_url] = FileHelper.scrape_bucket_url(@test_console_output_file)
           UI.message("bucket: #{params[:bucket_url]}")
         end
 
@@ -54,6 +54,9 @@ module Fastlane
           UI.message("Deleting files from firebase storage...")
           Action.sh("#{Commands.delete_resuls} #{params[:bucket_url]}")
         end
+
+        return {"result_bucket_url" => FileHelper.real_bucket_url(@test_console_output_file), "test_lab_console_url" => FileHelper.test_lab_console_url(@test_console_output_file), "test_failed" => FileHelper.has_failed_tests(@test_console_output_file)}
+
       end
 
       def self.description
@@ -182,17 +185,6 @@ module Fastlane
         :testing
       end
 
-      def self.scrape_bucket_url
-        File.open(@test_console_output_file).each do |line|
-          url = line.scan(/\[(.*)\]/).last&.first
-          next unless !url.nil? and (!url.empty? and url.include?("test-lab-"))
-          splitted_url = url.split("/")
-          length = splitted_url.length
-          return "gs://#{splitted_url[length - 2]}/#{splitted_url[length - 1]}"
-        end
-      end
-
-      private_class_method :scrape_bucket_url
     end
   end
 end

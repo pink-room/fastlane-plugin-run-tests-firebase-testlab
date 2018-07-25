@@ -20,6 +20,8 @@ fastlane add_plugin run_tests_firebase_testlab
 
 * Fetches the results to a local directory.
 
+* Returns the action results. 
+
 * Deletes the results from firebase bucket if wanted.
 
 ## Example
@@ -33,6 +35,20 @@ run_tests_firebase_testlab(
     project_id: "your-firebase-project-id",
     model: "Nexus6P",
     version: "27")
+```
+
+### Simple action result usage
+
+```
+result = run_tests_firebase_testlab(
+         project_id: "your-firebase-project-id",
+         model: "Nexus6P",
+         version: "27")
+    
+puts result["result_bucket_url"]
+puts result["test_lab_console_url"]
+puts "is test failed:"
+puts result["test_failed"]
 ```
 
 ### Parameters
