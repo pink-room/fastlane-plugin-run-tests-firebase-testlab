@@ -2,10 +2,10 @@ module Fastlane
   module FileHelper
     def self.scrape_bucket_url(test_console_output_file)
       File.open(test_console_output_file).each do |line|
-        urlArray = line.scan(/\[(.*)\]/).last
+        url_array = line.scan(/\[(.*)\]/).last
         url = nil
-        unless urlArray.nil?
-          url = urlArray.first
+        unless url_array.nil?
+          url = url_array.first
         end
         next unless !url.nil? and (!url.empty? and url.include?("test-lab-"))
         splitted_url = url.split("/")
@@ -16,24 +16,20 @@ module Fastlane
 
     def self.has_failed_tests(test_console_output_file)
       File.open(test_console_output_file).each do |line|
-        lineFailed = line.scan(/\| Failed  \|/)
+        line_failed = line.scan(/\| Failed  \|/)
 
-        unless lineFailed.nil?
-          unless lineFailed.first.nil?
-            print(line)
-            return true
-          end
+        if !line_failed.nil? && !line_failed.first.nil?
+          print(line)
+          return true
         end
       end
 
       File.open(test_console_output_file).each do |line|
-        lineFailed = line.scan(/failed/)
+        line_failed = line.scan(/failed/)
 
-        unless lineFailed.nil?
-          unless lineFailed.first.nil?
+        if !line_failed.nil? && !line_failed.first.nil?
             print(line)
             return true
-          end
         end
       end
 
@@ -42,10 +38,10 @@ module Fastlane
 
     def self.real_bucket_url(test_console_output_file)
       File.open(test_console_output_file).each do |line|
-        urlArray = line.scan(/\[(.*)\]/).last
+        url_array = line.scan(/\[(.*)\]/).last
         url = ""
-        unless urlArray.nil?
-          url = urlArray.first
+        unless url_array.nil?
+          url = url_array.first
         end
         unless !url.nil? and (!url.empty? and url.include?("test-lab-"))
           next
@@ -56,10 +52,10 @@ module Fastlane
 
     def self.test_lab_console_url(test_console_output_file)
       File.open(test_console_output_file).each do |line|
-        urlArray = line.scan(/\[(.*)\]/).last
+        url_array = line.scan(/\[(.*)\]/).last
         url = ""
-        unless urlArray.nil?
-          url = urlArray.first
+        unless url_array.nil?
+          url = url_array.first
         end
         unless !url.nil? and (!url.empty? and url.include?("\/testlab\/histories\/"))
           next
